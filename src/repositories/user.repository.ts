@@ -1,7 +1,7 @@
 import sql from 'mssql'
 import { FastifyBaseLogger } from 'fastify'
 
-const DB_NAME = 'brabopak'
+const DB_NAME = 'distribution'
 
 export default class UserRepository {
   schema: string = 'manage.'
@@ -13,12 +13,29 @@ export default class UserRepository {
     this._pool = pool
   }
 
-  async get(user_id: string, id?: number) {
+  async get(user_id: string, id?: number, customer_id?: any, address_id?: any, status?: any, user_type?: any, usercode?: any, username?: any) {
     const r = new sql.Request(this._pool)
     r.input('user_id', sql.Int, user_id)
     if (id)
       r.input('id', sql.Int, id)
-    this._logger.debug({ sqlParam: { user_id, id }, sqlDb: DB_NAME, sqlSchema: this.schema, sqlProc: 'usp_getUsers' }, 'running procedure')
+    if (customer_id)
+      r.input('customer_id', sql.Int, customer_id)
+    if (address_id)
+      r.input('address_id', sql.Int, address_id)
+    if (status)
+      r.input('status', sql.VarChar, status)
+    if (user_type)
+      r.input('user_type', sql.Int, user_type)
+    if (usercode)
+      r.input('usercode', sql.Int, usercode)
+    if (username)
+      r.input('username', sql.VarChar, username)
+    this._logger.debug({
+      sqlParam: { user_id, id, customer_id, address_id, status, user_type, usercode, username },
+      sqlDb: DB_NAME,
+      sqlSchema: this.schema,
+      sqlProc: 'usp_getUsers'
+    }, 'running procedure')
     const result = await r.execute(this.schema + 'usp_getUsers')
     this._logger.debug({ result }, 'procedure result')
 
@@ -42,7 +59,12 @@ export default class UserRepository {
     r.input('accepted_terms_version', sql.VarChar, user.accepted_terms_version)
     r.input('active', sql.Bit, user.active)
 
-    this._logger.debug({ sqlParam: { user_id, id }, sqlDb: DB_NAME, sqlSchema: this.schema, sqlProc: 'usp_putUser' }, 'running procedure')
+    this._logger.debug({
+      sqlParam: { user_id, id },
+      sqlDb: DB_NAME,
+      sqlSchema: this.schema,
+      sqlProc: 'usp_putUser'
+    }, 'running procedure')
     const result = await r.execute(this.schema + 'usp_putUser')
     this._logger.debug({ result }, 'procedure result')
 
