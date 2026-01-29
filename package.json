@@ -4,17 +4,18 @@
   "author": "Jamie Vangeysel",
   "license": "MIT",
   "scripts": {
+    "build": "esbuild ./index.ts --bundle --platform=node --minify --packages=external --external:'./config' --outfile=index.min.js",
+    "publish": "npm run build && ./build.sh",
     "test": "tap --reporter=list --show-full-coverage"
   },
   "dependencies": {
-    "@groupclaes/fastify-elastic": "^4.2.1",
-    "fastify": "^4.25.1",
-    "jose": "^5.1.3",
-    "mssql": "^10.0.1"
+    "@groupclaes/fastify-elastic": "^4.4.0",
+    "fastify": "^4.29.1",
+    "jose": "^5.10.0",
+    "mssql": "^11.0.1"
   },
   "devDependencies": {
-    "@types/mssql": "^9.1.4",
-    "@types/node": "^20.10.5",
-    "tap": "^18.6.1"
+    "@types/mssql": "^9.1.7",
+    "@types/node": "^20.19.0"
   }
 }
